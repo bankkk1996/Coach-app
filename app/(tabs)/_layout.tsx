@@ -1,57 +1,85 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+// app/(tabs)/_layout.tsx
+import React from "react";
+import { Tabs } from "expo-router";
+import { Platform } from "react-native";
+import {
+  Home,
+  Salad,
+  Dumbbell,
+  CalendarDays,
+  Settings as SettingsIcon,
+} from "lucide-react-native";
+import { colors } from "../../theme";
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+const ICON_SIZE = 22;
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: "#9ca3af", // เทาอ่อน
+        tabBarStyle: {
+          backgroundColor: "#fff",
+          borderTopColor: "#e5e7eb",
+          height: Platform.select({ ios: 80, android: 80 }),
+          paddingBottom: Platform.select({ ios: 8, android: 8 }),
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginBottom: 4,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: "Home",
+          tabBarIcon: ({ color }) => (
+            <Home color={color} size={ICON_SIZE} strokeWidth={2} />
           ),
         }}
       />
+
       <Tabs.Screen
-        name="two"
+        name="meals"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Meals",
+          tabBarIcon: ({ color }) => (
+            <Salad color={color} size={ICON_SIZE} strokeWidth={2} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="workout"
+        options={{
+          title: "Workout",
+          tabBarIcon: ({ color }) => (
+            <Dumbbell color={color} size={ICON_SIZE} strokeWidth={2} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="planner"
+        options={{
+          title: "Planner",
+          tabBarIcon: ({ color }) => (
+            <CalendarDays color={color} size={ICON_SIZE} strokeWidth={2} />
+          ),
+        }}
+      />
+
+      {/* ถ้ามีหน้า Settings ใน Phase 1 */}
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <SettingsIcon color={color} size={ICON_SIZE} strokeWidth={2} />
+          ),
         }}
       />
     </Tabs>
